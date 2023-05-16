@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CatseyeProject.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Contracts;
 
-namespace CatseyeProject.Models
+namespace CatseyeProject.Context
 {
     public class ApplicationDbContext:DbContext
     {
@@ -9,6 +10,8 @@ namespace CatseyeProject.Models
         {
 
         }
+        public DbSet<CatsApplicationUser> tblAppUsers { get; set; }
+        public DbSet<UserRefreshToken> tblUserRefreshTokens { get; set; }
         public DbSet<BrowserCount> tblBrowserCount { get; set; }
         public DbSet<CatsSelseDetails> tblCatsSelseDetails { get; set; }
         public DbSet<CatsBillingadres> tblBilling { get; set; }
