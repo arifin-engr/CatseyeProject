@@ -23,12 +23,6 @@ namespace CatseyeProject.Controllers
         }
 
 
-        [Authorize]
-      
-        [ProducesResponseType(typeof(string), 404)]
-        [ProducesResponseType(typeof(List<string>), 200)]
-        [ProducesResponseType(typeof(List<string>), 400)]
-
         [HttpGet]
         [Route("GetCustomers")]
         public IEnumerable<CatsCustomer> Get()

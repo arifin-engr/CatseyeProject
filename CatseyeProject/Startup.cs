@@ -1,10 +1,12 @@
+using CatseyeProject.Configuration;
 using CatseyeProject.Context;
 using CatseyeProject.Models;
-using CatseyeProject.Services;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,96 +39,56 @@ namespace CatseyeProject
             services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("con")));
             services.AddControllers();
 
-            services.AddSwaggerGen(c =>
+            ConfigureSwagger(services);
+
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+
+            services.AddAuthentication(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "JWTRefreshTokens", Version = "v1" });
+                options.DefaultAuthenticateScheme=JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme=JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme=JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(jwt=>
+            {
+                var key = Encoding.ASCII.GetBytes(Configuration.GetSection("JwtConfig:Secret").Value);
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                jwt.SaveToken = true;
+                jwt.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    Description = "This site uses Bearer token and you have to pass" +
-                    "it as Bearer<<space>>Token",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer=false,
+                    ValidateAudience=false,
+                    RequireExpirationTime=false,
+                    ValidateLifetime=true
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                {
-                    {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference=new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id="Bearer"
-                        },
-                        Scheme="oauth2",
-                        Name="Bearer",
-                        In = ParameterLocation.Header
-                    },
-                    new List<string>()
-                    }
-                });
+
+                };
             });
 
-            var jwtKey = Configuration.GetValue<string>("JwtSettings:Key");
-            var keyBytes = Encoding.ASCII.GetBytes(jwtKey);
-
-            TokenValidationParameters tokenValidation = new TokenValidationParameters
-            {
-                IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
-                ValidateLifetime = true,
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ClockSkew = TimeSpan.Zero
-            };
-
-            services.AddSingleton(tokenValidation);
-
-            services.AddAuthentication(authOptions =>
-            {
-                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(jwtOptions =>
-                {
-                    jwtOptions.TokenValidationParameters = tokenValidation;
-                    jwtOptions.Events = new JwtBearerEvents();
-                    jwtOptions.Events.OnTokenValidated = async (context) =>
-                    {
-                        var ipAddress = context.Request.HttpContext.Connection.RemoteIpAddress.ToString();
-                        var jwtService = context.Request.HttpContext.RequestServices.GetService<IJwtService>();
-                        var jwtToken = context.SecurityToken as JwtSecurityToken;
-                        if (!await jwtService.IsTokenValid(jwtToken.RawData, ipAddress))
-                            context.Fail("Invalid Token Details");
-
-
-                    };
-                });
-
-            services.AddTransient<IJwtService, JwtService>();
-
-
-
-
-            //ConfigureSwagger(services);
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
-        //private static void ConfigureSwagger(IServiceCollection services)
-        //{
-        //    services.AddSwaggerGen(c =>
-        //    {
-        //        c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-        //    });
-        //}
+        private static void ConfigureSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
+        }
+
+        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSwagger();
 
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "JWTRefreshTokens v1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json/", "My API V1");
+            });
 
             if (env.IsDevelopment())
             {
@@ -137,6 +99,7 @@ namespace CatseyeProject
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
