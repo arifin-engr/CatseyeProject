@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatseyeProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230518164041_init")]
-    partial class init
+    [Migration("20230504142355_nothing1")]
+    partial class nothing1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -123,7 +123,7 @@ namespace CatseyeProject.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("tblCatsCart");
+                    b.ToTable("tblcarts");
                 });
 
             modelBuilder.Entity("CatseyeProject.Models.CatsCartDetails", b =>
@@ -160,7 +160,7 @@ namespace CatseyeProject.Migrations
 
                     b.HasIndex("productdetailsId");
 
-                    b.ToTable("tblCatsCartDetails");
+                    b.ToTable("tblCartDetails");
                 });
 
             modelBuilder.Entity("CatseyeProject.Models.CatsCollection", b =>
@@ -378,7 +378,7 @@ namespace CatseyeProject.Migrations
 
                     b.HasIndex("ReasonId");
 
-                    b.ToTable("tblProduct");
+                    b.ToTable("tblOrderDetails");
                 });
 
             modelBuilder.Entity("CatseyeProject.Models.CatsProduct", b =>
@@ -434,7 +434,7 @@ namespace CatseyeProject.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("tblOrderDetails");
+                    b.ToTable("tblProduct");
                 });
 
             modelBuilder.Entity("CatseyeProject.Models.CatsProductCategory", b =>
@@ -516,7 +516,7 @@ namespace CatseyeProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductSizes");
+                    b.ToTable("tblProductSizes");
                 });
 
             modelBuilder.Entity("CatseyeProject.Models.CatsProductSubCategory", b =>
@@ -783,7 +783,7 @@ namespace CatseyeProject.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("tblCatsSelseDetails");
+                    b.ToTable("CatsSelseDetails");
                 });
 
             modelBuilder.Entity("CatseyeProject.Models.CatsShippingadres", b =>
@@ -1106,6 +1106,10 @@ namespace CatseyeProject.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -1157,6 +1161,8 @@ namespace CatseyeProject.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -1186,12 +1192,10 @@ namespace CatseyeProject.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -1228,12 +1232,10 @@ namespace CatseyeProject.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -1241,6 +1243,16 @@ namespace CatseyeProject.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CatseyeProject.Models.CatsApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("CatsApplicationUser");
                 });
 
             modelBuilder.Entity("CatseyeProject.Models.CatsBillingadres", b =>

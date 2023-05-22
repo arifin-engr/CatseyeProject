@@ -75,6 +75,30 @@ namespace CatseyeProject
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In=ParameterLocation.Header,
+                    Description="Please Insert Token",
+                    Name="Authorization",
+                    Type=SecuritySchemeType.Http,
+                    BearerFormat="JWT",
+                    Scheme="bearer"
+
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                         new OpenApiSecurityScheme
+                    {
+                        Reference=new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
+                    }
+                });
             });
         }
 

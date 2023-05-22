@@ -1,49 +1,45 @@
 ﻿using CatseyeProject.Context;
 using CatseyeProject.Models;
 using CatseyeProject.Models.DTOs;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CatseyeProject.Controllers
 {
-    [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    
-    public class CatsCustomersController : ControllerBase
+    public class CatsProductsController : ControllerBase
     {
 
         private readonly ApplicationDbContext _db;
-        public CatsCustomersController(ApplicationDbContext db)
+        public CatsProductsController(ApplicationDbContext db)
         {
-            _db= db;
+            _db = db;
         }
 
 
+
         [HttpGet]
-        [Route("GetCustomers")]
-        public IEnumerable<CatsCustomer> Get()
+        [Route("GetProducts")]
+        public IEnumerable<CatsProduct> Get()
         {
-            var data= _db.tblCustomers.ToList();
+            var data = _db.tblProduct.ToList();
             return data;
         }
 
-
         [HttpGet]
-        [Route("GetCustomerById")]
-        public ActionResult<CatsCustomer> GetById(int? id)
+        [Route("GetProductById")]
+        public ActionResult<CatsProduct> GetById(int? id)
         {
             if (id == 0 && id == null)
             {
                 return BadRequest(new RequestResult() { Result = false, Errors = new List<string>() { "Not Found" } });
             }
-            var product = _db.tblCustomers.FirstOrDefault(x => x.Id == id);
+            var product =  _db.tblProduct.FirstOrDefault(x => x.Id == id);
             if (product == null)
             {
                 return BadRequest(new RequestResult() { Result = false, Errors = new List<string>() { "Not Found" } });
@@ -51,6 +47,8 @@ namespace CatseyeProject.Controllers
             return Ok(product);
         }
 
+
+       
 
     }
 }

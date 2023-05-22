@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CatseyeProject.Migrations
 {
-    public partial class init : Migration
+    public partial class intial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,41 +39,13 @@ namespace CatseyeProject.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductSizes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true),
-                    Size = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductSizes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblBrowserCount",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CountNumber = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblBrowserCount", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,7 +77,7 @@ namespace CatseyeProject.Migrations
                     UpdatedBy = table.Column<string>(nullable: true),
                     UID = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    Mobile = table.Column<long>(nullable: false),
+                    Mobile = table.Column<int>(nullable: false),
                     Password = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -167,6 +139,42 @@ namespace CatseyeProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tblProductSizes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    Size = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblProductSizes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblproductTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    SubcategoryId = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(nullable: false),
+                    Image = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblproductTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tblreasons",
                 columns: table => new
                 {
@@ -181,26 +189,6 @@ namespace CatseyeProject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tblreasons", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblReturnReasons",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true),
-                    Reason = table.Column<string>(nullable: true),
-                    FlatDamageFee = table.Column<float>(nullable: false),
-                    PerDamageFee = table.Column<float>(nullable: false),
-                    RefundShippingFeee = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblReturnReasons", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -291,8 +279,8 @@ namespace CatseyeProject.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -336,8 +324,8 @@ namespace CatseyeProject.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -362,8 +350,7 @@ namespace CatseyeProject.Migrations
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
                     CustomerId = table.Column<int>(nullable: false),
-                    FName = table.Column<string>(nullable: true),
-                    LName = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
                     Address1 = table.Column<string>(nullable: true),
                     city = table.Column<string>(nullable: true),
@@ -382,6 +369,32 @@ namespace CatseyeProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tblOrder",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    CustomerId = table.Column<int>(nullable: false),
+                    shipCharage = table.Column<float>(nullable: false),
+                    InvoiceNo = table.Column<string>(nullable: true),
+                    IsDelivered = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblOrder", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblOrder_tblCustomers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "tblCustomers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tblShipping",
                 columns: table => new
                 {
@@ -392,8 +405,7 @@ namespace CatseyeProject.Migrations
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
                     CustomerId = table.Column<int>(nullable: false),
-                    FName = table.Column<string>(nullable: true),
-                    LName = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
                     Address1 = table.Column<string>(nullable: true),
                     city = table.Column<string>(nullable: true),
@@ -412,6 +424,42 @@ namespace CatseyeProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tblProduct",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    CollectionId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Tag = table.Column<string>(nullable: true),
+                    NameTag = table.Column<string>(nullable: true),
+                    Discription = table.Column<string>(nullable: true),
+                    Image = table.Column<string>(nullable: true),
+                    Sizechart = table.Column<string>(nullable: true),
+                    TypeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblProduct", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblProduct_tblCollection_CollectionId",
+                        column: x => x.CollectionId,
+                        principalTable: "tblCollection",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblProduct_tblproductTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "tblproductTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tblSubCategory",
                 columns: table => new
                 {
@@ -422,17 +470,18 @@ namespace CatseyeProject.Migrations
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
                     CategoryId = table.Column<int>(nullable: false),
-                    SubName = table.Column<string>(nullable: true)
+                    SubName = table.Column<string>(nullable: true),
+                    CatsproductTypeId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tblSubCategory", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblSubCategory_tblProductCategory_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "tblProductCategory",
+                        name: "FK_tblSubCategory_tblproductTypes_CatsproductTypeId",
+                        column: x => x.CatsproductTypeId,
+                        principalTable: "tblproductTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -464,114 +513,6 @@ namespace CatseyeProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblOrder",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true),
-                    CustomerId = table.Column<int>(nullable: false),
-                    ShippingId = table.Column<int>(nullable: false),
-                    BillingId = table.Column<int>(nullable: false),
-                    shipCharage = table.Column<float>(nullable: false),
-                    ShippingLabel = table.Column<string>(nullable: true),
-                    InvoiceNo = table.Column<string>(nullable: true),
-                    TotalAmount = table.Column<float>(nullable: false),
-                    PaymentToken = table.Column<string>(nullable: true),
-                    ReturnAmount = table.Column<float>(nullable: false),
-                    IsDelivered = table.Column<bool>(nullable: false),
-                    Islabelprint = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblOrder", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblOrder_tblBilling_BillingId",
-                        column: x => x.BillingId,
-                        principalTable: "tblBilling",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblOrder_tblCustomers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "tblCustomers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_tblOrder_tblShipping_ShippingId",
-                        column: x => x.ShippingId,
-                        principalTable: "tblShipping",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblproductTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true),
-                    SubcategoryId = table.Column<int>(nullable: false),
-                    Type = table.Column<string>(nullable: false),
-                    Image = table.Column<string>(nullable: true),
-                    catsProductSubCategoriesId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblproductTypes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblproductTypes_tblSubCategory_catsProductSubCategoriesId",
-                        column: x => x.catsProductSubCategoriesId,
-                        principalTable: "tblSubCategory",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblOrderDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true),
-                    CollectionId = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Islive = table.Column<bool>(nullable: false),
-                    Tag = table.Column<string>(nullable: true),
-                    NameTag = table.Column<string>(nullable: true),
-                    Discription = table.Column<string>(nullable: true),
-                    Image = table.Column<string>(nullable: true),
-                    Sizechart = table.Column<string>(nullable: true),
-                    TypeId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblOrderDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblOrderDetails_tblCollection_CollectionId",
-                        column: x => x.CollectionId,
-                        principalTable: "tblCollection",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblOrderDetails_tblproductTypes_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "tblproductTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "tbldescription",
                 columns: table => new
                 {
@@ -588,9 +529,9 @@ namespace CatseyeProject.Migrations
                 {
                     table.PrimaryKey("PK_tbldescription", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tbldescription_tblOrderDetails_ProductId",
+                        name: "FK_tbldescription_tblProduct_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "tblOrderDetails",
+                        principalTable: "tblProduct",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -609,7 +550,6 @@ namespace CatseyeProject.Migrations
                     sizeId = table.Column<int>(nullable: false),
                     Color = table.Column<string>(nullable: true),
                     price = table.Column<float>(nullable: false),
-                    Newprice = table.Column<float>(nullable: false),
                     Cost = table.Column<float>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
                     Discount = table.Column<float>(nullable: false),
@@ -625,15 +565,15 @@ namespace CatseyeProject.Migrations
                 {
                     table.PrimaryKey("PK_tblProductdetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblProductdetails_tblOrderDetails_ProductId",
+                        name: "FK_tblProductdetails_tblProduct_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "tblOrderDetails",
+                        principalTable: "tblProduct",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_tblProductdetails_ProductSizes_sizeId",
+                        name: "FK_tblProductdetails_tblProductSizes_sizeId",
                         column: x => x.sizeId,
-                        principalTable: "ProductSizes",
+                        principalTable: "tblProductSizes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -656,47 +596,15 @@ namespace CatseyeProject.Migrations
                 {
                     table.PrimaryKey("PK_tblRating", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblRating_tblOrderDetails_catsProductId",
+                        name: "FK_tblRating_tblProduct_catsProductId",
                         column: x => x.catsProductId,
-                        principalTable: "tblOrderDetails",
+                        principalTable: "tblProduct",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblCatsCart",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true),
-                    CustomerId = table.Column<int>(nullable: false),
-                    isProcess = table.Column<bool>(nullable: false),
-                    Isinvoice = table.Column<bool>(nullable: false),
-                    CatsProductdetailsId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblCatsCart", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblCatsCart_tblProductdetails_CatsProductdetailsId",
-                        column: x => x.CatsProductdetailsId,
-                        principalTable: "tblProductdetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_tblCatsCart_tblCustomers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "tblCustomers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblCatsSelseDetails",
+                name: "CatsSelseDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -711,23 +619,57 @@ namespace CatseyeProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tblCatsSelseDetails", x => x.Id);
+                    table.PrimaryKey("PK_CatsSelseDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblCatsSelseDetails_tblProductdetails_CatsProductdetailsId",
+                        name: "FK_CatsSelseDetails_tblProductdetails_CatsProductdetailsId",
                         column: x => x.CatsProductdetailsId,
                         principalTable: "tblProductdetails",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_tblCatsSelseDetails_tblOrderDetails_ProductId",
+                        name: "FK_CatsSelseDetails_tblProduct_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "tblOrderDetails",
+                        principalTable: "tblProduct",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblProduct",
+                name: "tblcarts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    ProductdetailsId = table.Column<int>(nullable: false),
+                    CustomerId = table.Column<int>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    TotalPrice = table.Column<float>(nullable: false),
+                    isProcess = table.Column<bool>(nullable: false),
+                    Isinvoice = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblcarts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblcarts_tblCustomers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "tblCustomers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblcarts_tblProductdetails_ProductdetailsId",
+                        column: x => x.ProductdetailsId,
+                        principalTable: "tblProductdetails",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblOrderDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -737,34 +679,31 @@ namespace CatseyeProject.Migrations
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
                     OrderId = table.Column<int>(nullable: false),
-                    ReasonId = table.Column<int>(nullable: true),
                     ProductdetailsId = table.Column<int>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
-                    ReturnQuantity = table.Column<int>(nullable: false),
-                    IsReturned = table.Column<bool>(nullable: false),
-                    DamageFee = table.Column<float>(nullable: false),
-                    ReturnSubmitDate = table.Column<DateTime>(nullable: false),
-                    Subtotal = table.Column<float>(nullable: false)
+                    Subtotal = table.Column<int>(nullable: false),
+                    catsorderDetailsId = table.Column<int>(nullable: true),
+                    CatsOrderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tblProduct", x => x.Id);
+                    table.PrimaryKey("PK_tblOrderDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblProduct_tblOrder_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_tblOrderDetails_tblOrder_CatsOrderId",
+                        column: x => x.CatsOrderId,
                         principalTable: "tblOrder",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_tblProduct_tblProductdetails_ProductdetailsId",
+                        name: "FK_tblOrderDetails_tblProductdetails_ProductdetailsId",
                         column: x => x.ProductdetailsId,
                         principalTable: "tblProductdetails",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_tblProduct_tblReturnReasons_ReasonId",
-                        column: x => x.ReasonId,
-                        principalTable: "tblReturnReasons",
+                        name: "FK_tblOrderDetails_tblOrderDetails_catsorderDetailsId",
+                        column: x => x.catsorderDetailsId,
+                        principalTable: "tblOrderDetails",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -791,37 +730,6 @@ namespace CatseyeProject.Migrations
                     table.ForeignKey(
                         name: "FK_tblStockInformation_tblProductdetails_ProductdetailsId",
                         column: x => x.ProductdetailsId,
-                        principalTable: "tblProductdetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblCatsCartDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true),
-                    Quantity = table.Column<int>(nullable: false),
-                    productdetailsId = table.Column<int>(nullable: false),
-                    CartId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblCatsCartDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblCatsCartDetails_tblCatsCart_CartId",
-                        column: x => x.CartId,
-                        principalTable: "tblCatsCart",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblCatsCartDetails_tblProductdetails_productdetailsId",
-                        column: x => x.productdetailsId,
                         principalTable: "tblProductdetails",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -867,39 +775,29 @@ namespace CatseyeProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CatsSelseDetails_CatsProductdetailsId",
+                table: "CatsSelseDetails",
+                column: "CatsProductdetailsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CatsSelseDetails_ProductId",
+                table: "CatsSelseDetails",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tblBilling_CustomerId",
                 table: "tblBilling",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblCatsCart_CatsProductdetailsId",
-                table: "tblCatsCart",
-                column: "CatsProductdetailsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblCatsCart_CustomerId",
-                table: "tblCatsCart",
+                name: "IX_tblcarts_CustomerId",
+                table: "tblcarts",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblCatsCartDetails_CartId",
-                table: "tblCatsCartDetails",
-                column: "CartId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblCatsCartDetails_productdetailsId",
-                table: "tblCatsCartDetails",
-                column: "productdetailsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblCatsSelseDetails_CatsProductdetailsId",
-                table: "tblCatsSelseDetails",
-                column: "CatsProductdetailsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblCatsSelseDetails_ProductId",
-                table: "tblCatsSelseDetails",
-                column: "ProductId");
+                name: "IX_tblcarts_ProductdetailsId",
+                table: "tblcarts",
+                column: "ProductdetailsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblcontractus_ReasonId",
@@ -912,44 +810,34 @@ namespace CatseyeProject.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblOrder_BillingId",
-                table: "tblOrder",
-                column: "BillingId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_tblOrder_CustomerId",
                 table: "tblOrder",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblOrder_ShippingId",
-                table: "tblOrder",
-                column: "ShippingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblOrderDetails_CollectionId",
+                name: "IX_tblOrderDetails_CatsOrderId",
                 table: "tblOrderDetails",
-                column: "CollectionId");
+                column: "CatsOrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblOrderDetails_TypeId",
+                name: "IX_tblOrderDetails_ProductdetailsId",
                 table: "tblOrderDetails",
-                column: "TypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblProduct_OrderId",
-                table: "tblProduct",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblProduct_ProductdetailsId",
-                table: "tblProduct",
                 column: "ProductdetailsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblProduct_ReasonId",
+                name: "IX_tblOrderDetails_catsorderDetailsId",
+                table: "tblOrderDetails",
+                column: "catsorderDetailsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblProduct_CollectionId",
                 table: "tblProduct",
-                column: "ReasonId");
+                column: "CollectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblProduct_TypeId",
+                table: "tblProduct",
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblProductdetails_ProductId",
@@ -960,11 +848,6 @@ namespace CatseyeProject.Migrations
                 name: "IX_tblProductdetails_sizeId",
                 table: "tblProductdetails",
                 column: "sizeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblproductTypes_catsProductSubCategoriesId",
-                table: "tblproductTypes",
-                column: "catsProductSubCategoriesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblRating_catsProductId",
@@ -982,9 +865,9 @@ namespace CatseyeProject.Migrations
                 column: "ProductdetailsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblSubCategory_CategoryId",
+                name: "IX_tblSubCategory_CatsproductTypeId",
                 table: "tblSubCategory",
-                column: "CategoryId");
+                column: "CatsproductTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1005,13 +888,13 @@ namespace CatseyeProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "tblBrowserCount");
+                name: "CatsSelseDetails");
 
             migrationBuilder.DropTable(
-                name: "tblCatsCartDetails");
+                name: "tblBilling");
 
             migrationBuilder.DropTable(
-                name: "tblCatsSelseDetails");
+                name: "tblcarts");
 
             migrationBuilder.DropTable(
                 name: "tblcontractus");
@@ -1023,7 +906,10 @@ namespace CatseyeProject.Migrations
                 name: "tblHomBanner");
 
             migrationBuilder.DropTable(
-                name: "tblProduct");
+                name: "tblOrderDetails");
+
+            migrationBuilder.DropTable(
+                name: "tblProductCategory");
 
             migrationBuilder.DropTable(
                 name: "tblProductColors");
@@ -1035,7 +921,13 @@ namespace CatseyeProject.Migrations
                 name: "tblsearch");
 
             migrationBuilder.DropTable(
+                name: "tblShipping");
+
+            migrationBuilder.DropTable(
                 name: "tblStockInformation");
+
+            migrationBuilder.DropTable(
+                name: "tblSubCategory");
 
             migrationBuilder.DropTable(
                 name: "tblToken");
@@ -1047,46 +939,28 @@ namespace CatseyeProject.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "tblCatsCart");
-
-            migrationBuilder.DropTable(
                 name: "tblreasons");
 
             migrationBuilder.DropTable(
                 name: "tblOrder");
 
             migrationBuilder.DropTable(
-                name: "tblReturnReasons");
-
-            migrationBuilder.DropTable(
                 name: "tblProductdetails");
 
             migrationBuilder.DropTable(
-                name: "tblBilling");
-
-            migrationBuilder.DropTable(
-                name: "tblShipping");
-
-            migrationBuilder.DropTable(
-                name: "tblOrderDetails");
-
-            migrationBuilder.DropTable(
-                name: "ProductSizes");
-
-            migrationBuilder.DropTable(
                 name: "tblCustomers");
+
+            migrationBuilder.DropTable(
+                name: "tblProduct");
+
+            migrationBuilder.DropTable(
+                name: "tblProductSizes");
 
             migrationBuilder.DropTable(
                 name: "tblCollection");
 
             migrationBuilder.DropTable(
                 name: "tblproductTypes");
-
-            migrationBuilder.DropTable(
-                name: "tblSubCategory");
-
-            migrationBuilder.DropTable(
-                name: "tblProductCategory");
         }
     }
 }

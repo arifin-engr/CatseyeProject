@@ -24,8 +24,9 @@ namespace CatseyeProject.Context
         public DbSet<CatsproductDescription>tbldescription { get; set; }
         public DbSet<CatsHomebannercs> tblHomBanner { get; set; }
         public DbSet<CatsOrder> tblOrder { get; set; }
-        public DbSet<CatsProduct> tblOrderDetails { get; set; }
-        public DbSet<CatsOrderDetails> tblProduct { get; set; }
+        public DbSet<CatsOrderDetails> tblOrderDetails { get; set; }
+        
+        public DbSet<CatsProduct> tblProduct { get; set; }
         public DbSet<CatsProductCategory> tblProductCategory { get; set; }
         public DbSet<CatsProductColor> tblProductColors { get; set; }
         public DbSet<CatsProductdetails> tblProductdetails { get; set; }

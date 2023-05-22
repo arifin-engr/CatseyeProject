@@ -78,7 +78,7 @@ namespace CatseyeProject.Controllers
             if (ModelState.IsValid)
             {
                 // check user if exist
-                var existing_user = await _userManager.FindByEmailAsync(requestDto.Email);
+                var existing_user = await _userManager.FindByNameAsync(requestDto.Email);
                 if (existing_user==null)
                 {
                     return BadRequest(new AuthResult() { Result = false, Errors = new List<string>() { "Invalid Payload" } });
@@ -100,6 +100,9 @@ namespace CatseyeProject.Controllers
 
 
 
+        
+
+
         private string GenerateJwtToken(IdentityUser user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -112,8 +115,8 @@ namespace CatseyeProject.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("Id", user.Id),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Email, value: user.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Email, value: user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString())
                 }),
