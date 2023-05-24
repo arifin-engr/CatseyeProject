@@ -16,8 +16,8 @@ namespace CatseyeProject.Context
         public DbSet<BrowserCount> tblBrowserCount { get; set; }
         public DbSet<CatsSelseDetails> tblCatsSelseDetails { get; set; }
         public DbSet<CatsBillingadres> tblBilling { get; set; }
-        public DbSet<CatsCartDetails> tblCatsCartDetails { get; set; }
-        public DbSet<CatsCart> tblCatsCart { get; set; }
+        public DbSet<CatsCartDetails> tblCartDetails { get; set; }
+        public DbSet<CatsCart> tblcarts { get; set; }
         public DbSet<CatsCollection> tblCollection { get; set; }
         public DbSet<catsContractUs> tblcontractus { get; set; }
         public DbSet<CatsCustomer> tblCustomers { get; set; }

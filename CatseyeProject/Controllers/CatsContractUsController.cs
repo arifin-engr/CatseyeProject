@@ -29,7 +29,7 @@ namespace CatseyeProject.Controllers
 
 
         [HttpGet]
-        [Route("GetCatsContractUs")]
+        [Route("GetCatsContractUsById")]
         public ActionResult<catsContractUs> GetById(int? id)
         {
             if (id == 0 && id == null)

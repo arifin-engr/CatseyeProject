@@ -23,7 +23,7 @@ namespace CatseyeProject.Controllers
         [Route("GetCartDetails")]
         public IEnumerable<CatsCartDetails> Get()
         {
-            var data = _db.tblCatsCartDetails.ToList();
+            var data = _db.tblCartDetails.ToList();
             return data;
         }
 
@@ -36,7 +36,7 @@ namespace CatseyeProject.Controllers
             {
                 return BadRequest(new RequestResult() { Result = false, Errors = new List<string>() { "Not Found" } });
             }
-            var data = _db.tblCatsCartDetails.FirstOrDefault(x => x.Id == id);
+            var data = _db.tblCartDetails.FirstOrDefault(x => x.Id == id);
             if (data == null)
             {
                 return BadRequest(new RequestResult() { Result = false, Errors = new List<string>() { "Not Found" } });

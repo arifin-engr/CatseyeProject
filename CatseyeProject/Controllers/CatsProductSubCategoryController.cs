@@ -10,33 +10,33 @@ namespace CatseyeProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CatsCartController : ControllerBase
+    public class CatsProductSubCategoryController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
-        public CatsCartController(ApplicationDbContext db)
+        public CatsProductSubCategoryController(ApplicationDbContext db)
         {
             _db = db;
         }
 
 
         [HttpGet]
-        [Route("GetCart")]
-        public IEnumerable<CatsCart> Get()
+        [Route("GetProductSub")]
+        public IEnumerable<CatsProductSubCategory> Get()
         {
-            var data = _db.tblcarts.ToList();
+            var data = _db.tblSubCategory.ToList();
             return data;
         }
 
 
         [HttpGet]
-        [Route("GetCartById")]
-        public ActionResult<CatsCart> GetById(int? id)
+        [Route("GetProductSubById")]
+        public ActionResult<CatsProductSubCategory> GetById(int? id)
         {
             if (id == 0 && id == null)
             {
                 return BadRequest(new RequestResult() { Result = false, Errors = new List<string>() { "Not Found" } });
             }
-            var data = _db.tblcarts.FirstOrDefault(x => x.Id == id);
+            var data = _db.tblSubCategory.FirstOrDefault(x => x.Id == id);
             if (data == null)
             {
                 return BadRequest(new RequestResult() { Result = false, Errors = new List<string>() { "Not Found" } });
